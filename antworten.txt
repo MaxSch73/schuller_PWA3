@@ -1,0 +1,10 @@
+Aufgabe 4)
+Nenne alle Methoden, die du kennst, 
+mit denen du manuell das Aktivieren 
+des neuen Service Workers forcieren 
+kannst:
+
+In den Devtools auf "skipWaiting" drücken.
+In den Devtools beim Reiter "Application --> Service Workers" 
+das Kästchen "Update on reload" anhaken und die Seite reloaden.
+In vite.config.js registerType: 'autoUpdate' konfigurieren.
