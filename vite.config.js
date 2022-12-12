@@ -31,9 +31,23 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: '/employees',
-            handler: 'CacheFirst',
+            handler: 'NetworkFirst',
             options: {
               cacheName: 'max-employees',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 1, // <== 1 day
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: /.*images\/portraits\/.*.*jpg/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'max-images',
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 60 * 24 * 1, // <== 1 day
