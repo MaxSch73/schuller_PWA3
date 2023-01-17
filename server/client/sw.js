@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-115d7c9f'], (function (workbox) { 'use strict';
+define(['./workbox-e9c2ee0f'], (function (workbox) { 'use strict';
 
   /**
   * Welcome to your Workbox-powered service worker!
@@ -96,11 +96,11 @@ define(['./workbox-115d7c9f'], (function (workbox) { 'use strict';
     "url": "assets/index.0af82f49.css",
     "revision": null
   }, {
-    "url": "assets/index.6a80ea56.js",
+    "url": "assets/index.3b03e7a7.js",
     "revision": null
   }, {
     "url": "index.html",
-    "revision": "05deb6bb00faaacfc7cc0dcc2b5ed8a0"
+    "revision": "3b2cb8b606519eaaa7cac13c8e6a827b"
   }, {
     "url": "registerSW.js",
     "revision": "1872c500de691dce40960bb85481de07"
@@ -221,8 +221,17 @@ define(['./workbox-115d7c9f'], (function (workbox) { 'use strict';
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html")));
-  workbox.registerRoute("/employees", new workbox.CacheFirst({
+  workbox.registerRoute("/employees", new workbox.NetworkFirst({
     "cacheName": "max-employees",
+    plugins: [new workbox.ExpirationPlugin({
+      maxEntries: 50,
+      maxAgeSeconds: 86400
+    }), new workbox.CacheableResponsePlugin({
+      statuses: [0, 200]
+    })]
+  }), 'GET');
+  workbox.registerRoute(/.*images\/portraits\/.*.*jpg/, new workbox.CacheFirst({
+    "cacheName": "max-images",
     plugins: [new workbox.ExpirationPlugin({
       maxEntries: 50,
       maxAgeSeconds: 86400

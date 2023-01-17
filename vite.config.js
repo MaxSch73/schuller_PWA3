@@ -1,8 +1,9 @@
 import { fileURLToPath, URL } from 'url';
-import { VitePWA } from 'vite-plugin-pwa';
+
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import manifest from './manifest';
+import { VitePWA } from 'vite-plugin-pwa';
+import manifest from './manifest.js';
 
 export default defineConfig({
   server: {
@@ -25,7 +26,10 @@ export default defineConfig({
     vue(),
     VitePWA({
       manifest,
-      includeAssets: ['**/*.{js,css,html,jpg,ico,png,ttf,woff2}'],
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'service-worker.js',
+      includeAssets: ['**/*.{js,css,html,jpg,ico,xml,svg,png,ttf,woff2}'],
       workbox: {
         mode: 'development',
         runtimeCaching: [
@@ -33,7 +37,7 @@ export default defineConfig({
             urlPattern: '/employees',
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'max-employees',
+              cacheName: 'roberts-employees',
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 60 * 24 * 1, // <== 1 day
@@ -44,10 +48,10 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /.*images\/portraits\/.*.*jpg/,
+            urlPattern: /.*images\/portraits\/*.*.jpg/,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'max-images',
+              cacheName: 'roberts-images',
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 60 * 24 * 1, // <== 1 day
@@ -61,13 +65,13 @@ export default defineConfig({
       },
     }),
   ],
-  build: {
-    outDir: '../server/public',
-    emptyOutDir: false,
-  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
+  },
+  build: {
+    outDir: '../server/client',
+    emptyOutDir: false,
   },
 });
